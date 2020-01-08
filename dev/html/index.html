@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Json Form Field</title>
+	<style type="text/css">
+		/* Required layout/view */
+		.JsonFormField {
+			border:2px solid;
+			border-radius: 5px;
+			padding: 1em;
+		}
+
+		/*testing*/
+		.jsf-field {
+			border: 1px solid #999;
+			margin: 5px;
+			padding: 13px;
+		}
+
+		.jsf-Array span{
+			display: block;
+		}
+
+		/* Cosmetic  */
+		button.JsonFormFieldButton {
+			padding: 1em;
+			border-radius: 5px;
+			font-family: sans-serif;
+			text-transform: uppercase;
+			font-weight: 700;
+			border:none;
+			color:#fff;
+			background-color:#638EFC;
+			cursor: pointer !important;
+			margin: 1em 0;
+		}
+	</style>
+</head>
+<body>
+	
+	<label>Json Field</label>
+	<div class="JsonFormField JsonFormField-customName" data-JsonFormField="customName">
+		<!-- These Buttons Kick off the field -->
+		<button type="button" class="JsonFormFieldButton JsonFormField-Add-Array">Add Property</button>
+		<button type="button" class="JsonFormFieldButton JsonFormField-Add-KeyValuePair">Add Key Value Pair</button>
+		<button type="button" class="JsonFormFieldButton JsonFormField-Add-Array">Add Array</button>
+		<button type="button" class="JsonFormFieldButton JsonFormField-Add-Object">Add Object</button>
+
+<!--
+		<div class="jsf-field jsf-property">
+			<label>prop #0</label>
+			<input type="text" name="prop0" placeholder="prop #0">
+		</div>
+
+
+		<div class="jsf-field jsf-KeyValuePair">
+			<label>KeyValuePair as Single</label>
+			<input type="text" name="KeyValuePair0" placeholder="KeyValuePair #0">
+			<input type="text" name="KeyValuePair0" placeholder="This will be a repeater"> <button type="button">Value is Object</button>
+			<button type="button">Value is Array</button>
+		</div>
+
+-->
+			<div class="jsf-field">
+				<label>KeyValuePair When Array Select for Value</label>
+				<input type="text" name="KeyValuePair-PropertyName0" placeholder="KeyValuePair PropertyName">
+				
+				<div class="jsf-Array jsf-field">
+
+					<span>
+						<div class="jsf-field jsf-Object">
+
+							
+						</div>
+					</span>
+					
+					<span><input type="text" name="KeyValuePair0" placeholder="This will be a repeater"> <button type="button">Value</button></span>
+				</div>
+
+				
+				<button type="button">Value is Property</button>
+			</div>
+<!--
+		<div class="jsf-field jsf-Object"></div>
+-->
+	</div>
+
+</body>
+</html>
