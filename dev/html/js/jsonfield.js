@@ -1,12 +1,109 @@
 
+(function(){
+
+var jsonObjectField = CreateJsonObjectField();
+
+
+AppendToChildWithAttribute(jsonObjectField, {"attr": "data-jsonfieldcontainer","value":"keyValuePair"}, CreateKeyValuePairElements());
+AppendToChildWithAttribute(jsonObjectField, {"attr": "data-jsonfieldcontainer","value":"keyValuePair"}, CreateKeyValuePairElements());
+AppendToChildWithAttribute(jsonObjectField, {"attr": "data-jsonfieldcontainer","value":"keyValuePair"}, CreateKeyValuePairElements());
+
+document.getElementsByTagName("BODY")[0].append(jsonObjectField);
+
+
+
+})();
+
+
+function AppendToChildWithAttribute(element, attribute , appendThis) {
+	var children = element.children;
+	for (var i = children.length - 1; i >= 0; i--) {
+		if (children[i].getAttribute(attribute.attr) === attribute.value) {
+			children[i].append(appendThis);
+		}
+		
+	}
+}
+
+
+function CreateJsonObjectField() {
+	let div = createElement("div",["row","object"]);
+	let inputObjectName = createElement("input", "col",
+		[
+			{
+				"attr" :"type",
+				"value":"text"},
+			{
+				"attr":"placeholder",
+				"value":"Object Name"
+			},
+			{
+				"attr":"data-jsonField",
+				"value":"kvp-objectPropertyName"
+			}
+		]);
+	let propertyContainer = createElement("div", "col",
+		[
+			{
+				"attr":"data-jsonFieldContainer",
+				"value":"keyValuePair"
+			}
+		]);
+
+
+	div.append(inputObjectName);
+	div.append(propertyContainer);
+	return div;
+}
+
+
 
 function CreateKeyValuePairElements() {
 
-	var div = createElement("div",["keyvaluepair","row"]);
+	/*
+	*  Create Elements
+	*/
+	let div = createElement("div",["keyvaluepair","row"]);
+	let property = createElement(
+		"input",
+		"col",
+		[
+			{
+				"attr" :"type",
+				"value":"text"},
+			{
+				"attr":"placeholder",
+				"value":"property"
+			},
+			{
+				"attr":"data-jsonField",
+				"value":"kvp-property"
+			}
+		]
+	);
+	let value = createElement(
+		"input",
+		"col",
+		[
+			{
+				"attr":"type",
+				"value":"text"
+			},
+			{
+				"attr":"placeholder",
+				"value":"value"
+			},
+			{
+				"attr":"data-jsonField",
+				"value":"kvp-value"
+			}
+		]
+	);
+	
+	div.append(property);
+	div.append(value);
 
-	document.getElementsByTagName("BODY")[0].append(div);
-
-
+	return div;
 }
 
 function createElement(elementName, classNames, attributes) {
