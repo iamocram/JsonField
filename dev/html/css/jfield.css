@@ -1,0 +1,45 @@
+/* Required layout/view */
+.jfield {
+	border:2px solid;
+	border-radius: 5px;
+	padding: 1em;
+	position: relative;
+
+	min-height: 80px;
+}
+
+
+.jfield-option-pannels {
+	position: absolute;
+	left: 15px;
+	top:50%;
+	transform: translateY(-50%);
+}
+.jfield-option-pannels button + button {
+	margin-left: 15px;
+}
+
+/*testing*/
+.jsf-field {
+	border: 1px solid #999;
+	margin: 5px;
+	padding: 13px;
+}
+
+.jsf-Array span{
+	display: block;
+}
+
+/* Cosmetic  */
+button.jfield-button {
+	padding: 1em;
+	border-radius: 5px;
+	font-family: sans-serif;
+	text-transform: uppercase;
+	font-weight: 700;
+	border:none;
+	color:#fff;
+	background-color:#638EFC;
+	cursor: pointer !important;
+	margin: 1em 0;
+}

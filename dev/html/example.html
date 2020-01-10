@@ -79,7 +79,7 @@
 			position: relative;
 		}
 		input {
-			width: 100%;
+			width: calc(100% + 30px);
 		}
 		.object {
 			background: #aaa;
@@ -99,7 +99,32 @@
 <span style="padding: 0 20px";><span style="padding: 0 20px";>	]<br>
 <span style="padding: 0 20px";>}<br>
 
-	
+
 	<script type="text/javascript" src="js/jsonfield.js"></script>
+	<script type="text/javascript">
+				
+		(function(){
+
+			/* Create the parent as an array field */
+			var jsonArrayField = CreateArrayField();
+
+			/* Create one object that with 3 key value pair properties */
+			var jsonObjectField = CreateJsonObjectField();
+			AppendToChildWithAttribute(jsonObjectField, {"attr": "data-jsonfieldcontainer","value":"object"}, CreateKeyValuePairElements());
+			AppendToChildWithAttribute(jsonObjectField, {"attr": "data-jsonfieldcontainer","value":"object"}, CreateKeyValuePairElements());
+			AppendToChildWithAttribute(jsonObjectField, {"attr": "data-jsonfieldcontainer","value":"object"}, CreateKeyValuePairElements());
+			AppendToChildWithAttribute(jsonObjectField, {"attr": "data-jsonfieldcontainer","value":"object"}, CreateKeyValuePairElements());
+
+
+			/* append the inner objects to this array */
+			AppendToChildWithAttribute(jsonArrayField, {"attr": "data-jsonfieldcontainer","value":"array"}, jsonObjectField);
+
+
+			/* Add the field to the document */
+			document.getElementsByTagName("BODY")[0].append(jsonArrayField);
+
+		})();
+
+	</script>
 </body>
 </html>
