@@ -7,7 +7,13 @@
 
 	min-height: 80px;
 }
+.jfield-container.col .jfield-option-pannels {
+	display: none;
 
+}
+.jfield-container.col .jfield-option-pannels button {
+	font-size: 12px !important;
+}
 
 .jfield-option-pannels {
 	position: absolute;
@@ -19,6 +25,20 @@
 	margin-left: 15px;
 }
 
+.jfield-container  {
+	position: relative;
+}
+
+
+.jfield-container:hover .jfield-option-pannels {
+ display: block;
+	bottom: 0;
+}
+
+
+
+
+
 /*testing*/
 .jsf-field {
 	border: 1px solid #999;
@@ -29,6 +49,11 @@
 .jsf-Array span{
 	display: block;
 }
+
+
+
+
+
 
 /* Cosmetic  */
 button.jfield-button {
@@ -43,3 +68,4 @@ button.jfield-button {
 	cursor: pointer !important;
 	margin: 1em 0;
 }
+
