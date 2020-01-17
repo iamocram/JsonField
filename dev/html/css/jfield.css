@@ -1,4 +1,8 @@
 /* Required layout/view */
+.no-padding {
+	padding: 0 !important;
+	margin: 0 !important;
+}
 .jfield {
 	border:2px solid;
 	border-radius: 5px;
@@ -6,6 +10,12 @@
 	position: relative;
 
 	min-height: 80px;
+}
+.jfield > .object > input.col:first-child {
+	flex: none;
+	width: 100px;
+	background-color: #666;
+	color: white !important;
 }
 .jfield-container.col .jfield-option-pannels {
 	display: none;
