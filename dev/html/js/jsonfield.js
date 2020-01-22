@@ -1,300 +1,157 @@
-function jFieldInit() {
 
-	jFieldElements = document.getElementsByClassName("jfield");
+/*
+* Function Sections
+* INITIALIZE
+*
+*
+*
+* Create JField Elements
+* Create JField Buttons
+* Create Elements
+* Event Handlers
+*
+* */
+
+
+
+
+/* ========= INITIALIZE ============   */
+function initJField() {
+
+	let jFieldElements = document.getElementsByClassName("JField");
 
 	/*
 	 * Remove Event Handler for existing items
 	 */
 	Array.from(jFieldElements).forEach((el) => {
-	   StartContainerContent(el);
+		StartContainerContent(el);
 	});
-}
-
-
-/*  GET ALL AS JSON DATA */
-function GetJsonObjectFromJField( jFieldElement ) {
-	let jsonObject = {};
-
-	let dataType =  getJsonDataType(jFieldElement.children[0]);
-
-	if (dataType === "object") {
-		let objectName = getJsonPropertyName(jFieldElement.children[0]);
-
-		let objectValues = GetJFieldValues(jFieldElement.children[0]);
-
-	}
-}
-
-function GetJFieldValues(element) {
-
-	let jsonObject = {};
-
-
-	for (let i = 0; i < element.children.length ; i++) {
-
-		let thisChild = element.children.length;
-
-		switch (thisChild.getAttribute("data-jsonfield")) {
-			case "kvp-objectPropertyName":
-
-				break;
-			case "kvp-objectPropertyName":
-
-				break;
-		}
-
-
-
-
-
-
-	}
-
-
-
-
-
-
-	let container = getJsonContainerType(element);
-	let values = [];
-	for (let i = 0; i < container.children.length; i++) {
-
-		let thisChild = container.children[i];
-
-		if (thisChild.hasAttribute("data-jsonfieldcontainer")) {
-
-
-		} else if (element.classList.contains("keyvaluepair")) {
-			values.push(GetKeyValuePairJsonValues());
-		}
-
-
-
-
-	}
-	return values;
-}
-
-
-function GetKeyValuePairJsonValues(element) {
-
-	if (!element.classList.contains("keyvaluepair")) return;
-
-	var propertyName = element.children[0].value;
-	var propertyValue = element.children[1].value;
-
-	return {propertyName:propertyName, propertyValue:propertyValue};
 
 }
 
-function getJsonPropertyName(element) {
-	for (let i = 0; i < element.children.length; i++) {
-		if (element.children[i].getAttribute("data-jsonfield") === "kvp-objectPropertyName") {
-			return element.children[i].value;
-		}
-	}
+function StartContainerContent(jFieldInputContainer){
+
+	let container = CreateJFieldContainer();
+
+	container.append(CreateJField());
+
+
+	jFieldInputContainer.append(container);
 }
 
 
-
-/* SETUP  */
-function StartContainerContent(element) {
-
-	element.append(JFieldOptions());
-}
-
-
-function JFieldOptions() {
-
-	let buttonPanel = createElement("div","jfield-option-pannels");
-
-	let arrayButton = createElement("Button","btn btn-dark jfield-button", {"attr":"type","value":"button"});
-	arrayButton.addEventListener("click", JFieldArrayClick);
-
-	let objectButton = createElement("Button","btn btn-dark jfield-button", {"attr":"type","value":"button"});
-	objectButton.addEventListener("click", JFieldObjectClick);
-
-	arrayButton.innerHTML = "<span class='jfield-plus'>+</span> Array";
-	objectButton.innerHTML = "<span class='jfield-plus'>+</span> Object";
-
-	buttonPanel.append(arrayButton);
-	buttonPanel.append(objectButton);
-
-	return buttonPanel;
-}
-
-function JFieldOptionsObject() {
-	let buttonPanelForObjects = createElement("div","jfield-option-object-pannels");
-
-	let keyValuePairAddButton = createElement("Button","btn btn-dark jfield-button", {"attr":"type","value":"button"});
-	keyValuePairAddButton.addEventListener("click", JFieldAddKeyValuePairClick);
-	keyValuePairAddButton.innerHTML = "<span class='jfield-plus'>+</span> Property";
-
-
-	buttonPanelForObjects.append(keyValuePairAddButton);
-
-	return buttonPanelForObjects;
-}
-
-
-function AppendToChildWithAttribute(element, attribute , appendThis) {
-	var children = element.children;
-	for (var i = children.length - 1; i >= 0; i--) {
-		if (children[i].getAttribute(attribute.attr) === attribute.value) {
-			children[i].append(appendThis);
-		}
-	}
-}
-
-
-function CreateJsonObjectField() {
-	let div = createElement("div",["row","object"], [ {"attr":"data-json-type", "value":"object"},{"attr":"data-jsonField","value":"json-type"}]);
-	let propertyContainer = createElement("div", "col jfield-container no-padding",
-		[
-			{
-				"attr":"data-jsonFieldContainer",
-				"value":"object"
-			},
-			{
-				"attr":"data-jsonField",
-				"value":"container"
-			}
-		]);
-
-	/* add initial key value pair */
-	propertyContainer.append(CreateKeyValuePairElements());
-	propertyContainer.append(JFieldOptionsObject());
-
-	div.append(propertyContainer);
-	return div;
-}
-
-/* Creates the array field */
-function CreateArrayField() {
-	let div = createElement("div",["row","array"],[ {"attr":"data-json-type", "value":"array"},{"attr":"data-jsonField","value":"json-type"}]);
-	let inputObjectName = createElement("input", "col",
-		[
-			{
-				"attr" :"type",
-				"value":"text"
-			},
-			{
-				"attr":"placeholder",
-				"value":"Value"
-			},
-			{
-				"attr":"data-jsonField",
-				"value":"kvp-arrayPropertyValue"
-			}
-		]);
-	let propertyContainer = createElement("div", "col jfield-container",
-		[
-			{
-				"attr":"data-jsonFieldContainer",
-				"value":"array"
-			},
-			{
-				"attr":"data-jsonField",
-				"value":"container"
-			}
-		]);
-
-
-	div.append(inputObjectName);
-	div.append(propertyContainer);
-	return div;
-}
-
-
-function CreateValueOnlyElement() {
-	let value = createElement(
-			"input",
-			"row",
-			[
-				{
-					"attr":"type",
-					"value":"text"
-				},
-				{
-					"attr":"placeholder",
-					"value":"value"
-				},
-				{
-					"attr":"data-jsonField",
-					"value":"kvp-value"
-				}
-			]
-		);
-		return value;
-}
-
-
-function CreateKeyValuePairElements() {
+/* ========= Create JField Element ============   */
+/*
+* This field needs the following triggers
+* 1) Add another JField to the column below
+* 2) Replace Itself with a key value pair Element (value is another JField)
+* */
+function CreateJField(property = false) {
 
 	/*
-	*  Create Elements
-	*/
-	let div = createElement("div","keyvaluepair row no-gutters");
-	let property = CreateJsonPropertyField(createElement(
-		"input",
-		"col",
-		[
-			{
-				"attr" :"type",
-				"value":"text"
-			},
-			{
-				"attr":"placeholder",
-				"value":"property"
-			},
-			{
-				"attr":"data-jsonField",
-				"value":"kvp-property"
-			}
-		]
-	));
-	let value = CreateJsonValueField(createElement(
-		"input",
-		"col",
-		[
-			{
-				"attr":"type",
-				"value":"text"
-			},
-			{
-				"attr":"placeholder",
-				"value":"value"
-			},
-			{
-				"attr":"data-jsonField",
-				"value":"kvp-value"
-			}
-		]
-	));
+	* Create the main field container
+	* */
+	let JField = createElement("div","row JField-Div", {"attr":"data-JFieldType", "value":"JFieldValue"});
 
-	div.append(property);
-	div.append(value);
+	/*
+	* Create the button that would convert the single value field to a double
+	* */
+	let KeyValuePairReplaceButton = KeyValuePairButton();
 
-	return div;
+	/*
+	* Create the input
+	* */
+	let Input = createElement("input", "JField-Row",[{"attr":"data-JFieldType", "value":"Input"},{"attr":"placeholder", "value":"value"}]);
+
+	/*
+	* Append the created elements
+	* */
+	JField.append(Input);
+
+	JField.append(KeyValuePairReplaceButton);
+
+	let button = AddValueButton();
+
+	JField.append(button);
+
+	/*
+	* Return these elements
+	* */
+	return JField;
+}
+
+function CreateKeyValuePairField(){
+
+	let JField = createElement("div","row JField-Div");
+
+	/*
+	* Create Property Field
+	* */
+	let fieldProperty = createElement("div","col JField-Div", {"attr":"data-JFieldType", "value":"JFieldProperty"});
+
+
+	/*
+	* Create the input
+	* */
+	let input = createElement("input", "JField-Row row",[{"attr":"data-JFieldType", "value":"Input"},{"attr":"placeholder", "value":"Property Name"}]);
+
+	fieldProperty.append(input);
+
+	let container = CreateJFieldContainer();
+
+	/*
+	* Create Value Field
+	* */
+	let fieldValue = createElement("div","col JField-Div", {"attr":"data-JFieldType", "value":"JFieldValue"});;
+
+	input = createElement("input", "row JField-Row",[{"attr":"data-JFieldType", "value":"Input"},{"attr":"placeholder", "value":"Value"}]);
+
+	/*
+	* Create the button that would convert the single value field to a double
+	* */
+	let KeyValuePairReplaceButton = KeyValuePairButton();
+
+	/*
+	* Create the button that would convert the single value field to a double
+	* */
+	let button = AddValueButton();
+
+
+	fieldValue.append(input);
+	fieldValue.append(button);
+	fieldValue.append(KeyValuePairReplaceButton);
+	container.append(fieldValue);
+
+
+	JField.append(fieldProperty);
+	JField.append(container);
+
+	return JField;
+
+}
+
+function CreateJFieldContainer() {
+	return createElement("div","col JFieldContainer-Div array-container no-gutters");
+}
+
+/* ========= Create JField Buttons ============   */
+
+function KeyValuePairButton() {
+	let KeyValuePairReplaceButton = createElement("button", "JField-KeyValuePair-button",[{"attr":"type", "value":"button"}]);
+	KeyValuePairReplaceButton.innerHTML = "KeyValuePair";
+	KeyValuePairReplaceButton.addEventListener("click", OnJFieldKeyValuePairClick);
+	return KeyValuePairReplaceButton;
+}
+
+function AddValueButton() {
+	let KeyValuePairReplaceButton = createElement("button", "JField-value-button",[{"attr":"type", "value":"button"}]);
+	KeyValuePairReplaceButton.innerHTML = "+ ADD";
+	KeyValuePairReplaceButton.addEventListener("click", OnAddValueClick);
+	return KeyValuePairReplaceButton;
 }
 
 
-
-function CreateJsonValueField(element) {
-
-	let ele = createElement("div", "col", {"attr":"data-jsonField","value":"value"});
-
-	ele.append(element);
-	return ele;
-}
-function CreateJsonPropertyField(element) {
-
-	let ele = createElement("div", "col", {"attr":"data-jsonField","value":"property"});
-
-	ele.append(element);
-	return ele;
-}
-
+/* ========= Create Elements ============   */
 
 function createElement(elementName, classNames, attributes) {
 
@@ -318,7 +175,7 @@ function addClassNames (element, classNames) {
 
 		// if the class is an array
 		if (Array.isArray(classNames)){
-			for (var i = classNames.length - 1; i >= 0; i--) {
+			for (let i = classNames.length - 1; i >= 0; i--) {
 				element.classList.add(classNames[i]);
 			}
 		} else {
@@ -330,12 +187,13 @@ function addClassNames (element, classNames) {
 	return element;
 }
 
+// [{ attr, value }]
 function addAttributes (element, attributes) {
 
 	if (attributes !== undefined) {
 		// if the attributes is an array
 		if (Array.isArray(attributes)){
-			for (var i = attributes.length - 1; i >= 0; i--) {
+			for (let i = attributes.length - 1; i >= 0; i--) {
 				element.setAttribute(attributes[i].attr, attributes[i].value);
 			}
 		}else {
@@ -347,47 +205,16 @@ function addAttributes (element, attributes) {
 }
 
 
-/*
-* Get Child Containers
-* */
-function GetChildByAttribute(element,attribute, value) {
-	let children = element.childNodes;
 
-	if (children == null) return;
+/* ========= Event Handlers ============   */
 
-	for (let i = 0; i < children.length; i++) {
-
-		if (children[i].getAttribute(attribute) === value ) {
-			return children[i];
-		}
-	}
-	return children;
-}
-function GetJsonFieldContainer(element, value) {
-	return GetChildByAttribute(element, "data-jsonfieldcontainer", value);
-}
-function GetFieldContainer(element) {
-
-	let children = element.childNodes;
-
-	if (children == null) return;
-
-	for (let i = 0; i < children.length; i++) {
-		if (children[i].hasAttribute("data-jsonfieldcontainer")) {
-			return children[i];
-		}
-	}
-}
-
-
-
-/* EVENT HANDLERS */
 function JFieldObjectClick(e) {
 
 	this.parentElement.parentElement.append(CreateJsonObjectField());
 
 	this.parentElement.remove();
 }
+
 function JFieldArrayClick(e) {
 
 	let arrayPanel = CreateArrayField();
@@ -403,12 +230,27 @@ function JFieldArrayClick(e) {
 	this.parentElement.remove();
 }
 
-function JFieldAddKeyValuePairClick() {
+function OnJFieldKeyValuePairClick() {
 
-	let numberOfChildren = this.parentElement.parentElement.childNodes.length;
+	let JField = CreateKeyValuePairField();
 
-	this.parentElement.parentElement.insertBefore(CreateKeyValuePairElements(),this.parentElement.parentElement.childNodes[numberOfChildren - 1]);
+	let thisGrandParent = this.parentElement;
 
-	GetJsonFromJField( document.getElementsByClassName("jfield")[0] );
+	thisGrandParent.classList.remove("row");
+
+
+	this.parentElement.innerHTML = "";
+
+	thisGrandParent.append(JField );
+
 }
 
+function OnAddValueClick() {
+
+	let JField = CreateJField();
+
+	let thisGrandParent = this.parentElement.parentElement;
+
+	thisGrandParent.append(JField );
+
+}

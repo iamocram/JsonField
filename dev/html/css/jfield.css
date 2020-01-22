@@ -1,81 +1,23 @@
-/* Required layout/view */
-.no-padding {
-	padding: 0 !important;
-	margin: 0 !important;
-}
-.jfield {
-	border:2px solid;
-	border-radius: 5px;
-	padding: 1em;
+.JField-Div {
 	position: relative;
-
-	min-height: 80px;
 }
-.jfield > .object > input.col:first-child {
-	flex: none;
-	width: 100px;
-	background-color: #666;
-	color: white !important;
-}
-.jfield-container.col .jfield-option-pannels {
+.JField-KeyValuePair-button {
 	display: none;
-
-}
-.jfield-container.col .jfield-option-pannels button {
-	font-size: 12px !important;
-}
-
-.jfield-option-pannels {
 	position: absolute;
-	left: 15px;
-	top:50%;
-	transform: translateY(-50%);
+	right: 0;
+	top:0;
+	z-index: 88;
 }
-.jfield-option-pannels button + button {
-	margin-left: 15px;
-}
-
-.jfield-container  {
-	position: relative;
-}
-
-
-.jfield-container:hover .jfield-option-pannels {
- display: block;
-	bottom: 0;
-}
-
-
-
-
-
-/*testing*/
-.jsf-field {
-	border: 1px solid #999;
-	margin: 5px;
-	padding: 13px;
-}
-
-.jsf-Array span{
+.JField-Div:hover .JField-KeyValuePair-button  {
 	display: block;
 }
-
-
-
-
-
-
-/* Cosmetic  */
-button.jfield-button {
-	padding: 1em;
-	border-radius: 5px;
-	font-family: sans-serif;
-	text-transform: uppercase;
-	font-weight: 700;
-	border:none;
-	color:#fff;
-	background-color:#638EFC;
-	cursor: pointer !important;
-	margin: 1em 0;
+.JField-value-button {
+	display: none;
+	position: absolute;
+	left: 0;
+	top:30px;
+	z-index: 88;
 }
-
+.JField-Div:hover .JField-value-button  {
+	display: block;
+}
