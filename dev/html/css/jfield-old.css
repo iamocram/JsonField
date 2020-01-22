@@ -1,0 +1,81 @@
+/* Required layout/view */
+.no-padding {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+.jField {
+	border:2px solid;
+	border-radius: 5px;
+	padding: 1em;
+	position: relative;
+
+	min-height: 80px;
+}
+.jField > .object > input.col:first-child {
+	flex: none;
+	width: 100px;
+	background-color: #666;
+	color: white !important;
+}
+.jField-container.col .jField-option-pannels {
+	display: none;
+
+}
+.jField-container.col .jField-option-pannels button {
+	font-size: 12px !important;
+}
+
+.jField-option-pannels {
+	position: absolute;
+	left: 15px;
+	top:50%;
+	transform: translateY(-50%);
+}
+.jField-option-pannels button + button {
+	margin-left: 15px;
+}
+
+.jField-container  {
+	position: relative;
+}
+
+
+.jField-container:hover .jField-option-pannels {
+ display: block;
+	bottom: 0;
+}
+
+
+
+
+
+/*testing*/
+.jsf-field {
+	border: 1px solid #999;
+	margin: 5px;
+	padding: 13px;
+}
+
+.jsf-Array span{
+	display: block;
+}
+
+
+
+
+
+
+/* Cosmetic  */
+button.jField-button {
+	padding: 1em;
+	border-radius: 5px;
+	font-family: sans-serif;
+	text-transform: uppercase;
+	font-weight: 700;
+	border:none;
+	color:#fff;
+	background-color:#638EFC;
+	cursor: pointer !important;
+	margin: 1em 0;
+}
+
