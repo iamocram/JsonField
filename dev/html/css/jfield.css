@@ -1,3 +1,25 @@
+.JField > .JFieldContainer-Div > .JField-Div >  button.JField-value-button  {
+	width: calc(100% + 30px);
+	margin: 0;
+	flex-grow: 1;
+}
+.JField button.JField-value-button {
+	width: calc(100% + 30px);
+	flex-grow: 1;
+}
+
+.JField button.JField-value-button {
+	width: calc(100% + 30px);
+	flex-grow: 1;
+}
+
+.JField-Div-KeyValue > .col:first-child {
+	flex-grow: 0.3;
+}
+.JField-Div-KeyValue > .col:last-child {
+	flex-grow: 0.7;
+}
+
 .JField-Div {
 	position: relative;
 }
@@ -8,16 +30,18 @@
 	top:0;
 	z-index: 88;
 }
-.JField-Div:hover .JField-KeyValuePair-button  {
+.JField-Div:hover > .JField-KeyValuePair-button  {
 	display: block;
 }
 .JField-value-button {
-	display: none;
-	position: absolute;
-	left: 0;
-	top:30px;
+	width: 100%;
+	border-radius: 5px;
+	padding: 5px 0;
 	z-index: 88;
+	/*display: none;*/
 }
 .JField-Div:hover .JField-value-button  {
 	display: block;
 }
+
+

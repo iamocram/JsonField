@@ -33,7 +33,16 @@ function StartContainerContent(jFieldInputContainer){
 
 	let container = CreateJFieldContainer();
 
-	container.append(CreateJField());
+	let JField = CreateJField();
+
+	let button = AddValueButton();
+
+
+
+	container.append(JField);
+
+	container.append(button);
+
 
 
 	jFieldInputContainer.append(container);
@@ -51,7 +60,7 @@ function CreateJField(property = false) {
 	/*
 	* Create the main field container
 	* */
-	let JField = createElement("div","row JField-Div", {"attr":"data-JFieldType", "value":"JFieldValue"});
+	let JField = createElement("div","row JField-Div JField-Div-Value", {"attr":"data-JFieldType", "value":"JFieldValue"});
 
 	/*
 	* Create the button that would convert the single value field to a double
@@ -70,10 +79,6 @@ function CreateJField(property = false) {
 
 	JField.append(KeyValuePairReplaceButton);
 
-	let button = AddValueButton();
-
-	JField.append(button);
-
 	/*
 	* Return these elements
 	* */
@@ -82,7 +87,7 @@ function CreateJField(property = false) {
 
 function CreateKeyValuePairField(){
 
-	let JField = createElement("div","row JField-Div");
+	let JField = createElement("div","row JField-Div JField-Div-KeyValue");
 
 	/*
 	* Create Property Field
@@ -114,14 +119,13 @@ function CreateKeyValuePairField(){
 	/*
 	* Create the button that would convert the single value field to a double
 	* */
-	let button = AddValueButton();
-
+	let valueButton = AddValueButton();
 
 	fieldValue.append(input);
-	fieldValue.append(button);
+
 	fieldValue.append(KeyValuePairReplaceButton);
 	container.append(fieldValue);
-
+	container.append(valueButton);
 
 	JField.append(fieldProperty);
 	JField.append(container);
@@ -144,7 +148,7 @@ function KeyValuePairButton() {
 }
 
 function AddValueButton() {
-	let KeyValuePairReplaceButton = createElement("button", "JField-value-button",[{"attr":"type", "value":"button"}]);
+	let KeyValuePairReplaceButton = createElement("button", "JField-value-button row",[{"attr":"type", "value":"button"}]);
 	KeyValuePairReplaceButton.innerHTML = "+ ADD";
 	KeyValuePairReplaceButton.addEventListener("click", OnAddValueClick);
 	return KeyValuePairReplaceButton;
@@ -249,8 +253,10 @@ function OnAddValueClick() {
 
 	let JField = CreateJField();
 
-	let thisGrandParent = this.parentElement.parentElement;
+	let thisParent = this.parentElement;
 
-	thisGrandParent.append(JField );
+	let numOfChildren = thisParent.childNodes.length;
+
+	thisParent.insertBefore(JField, thisParent.childNodes[numOfChildren - 1]);
 
 }
