@@ -33,13 +33,13 @@ function StartContainerContent(jFieldInputContainer){
 
 	let JField = CreateJField();
 
-	let button = AddValueButton();
+	let ColumnOptions = AddColumnOptions();
 
 	//button.setAttribute("style","display:block;");
 
 	container.append(JField);
 
-	container.append(button);
+	container.append(ColumnOptions);
 
 
 
@@ -53,7 +53,7 @@ function StartContainerContent(jFieldInputContainer){
 * 1) Add another JField to the column below
 * 2) Replace Itself with a key value pair Element (value is another JField)
 * */
-function CreateJField(property = false) {
+function CreateJField() {
 
 	/*
 	* Create the main field container
@@ -65,6 +65,7 @@ function CreateJField(property = false) {
 	* Create the button that would convert the single value field to a double
 	* */
 	let KeyValuePairReplaceButton = KeyValuePairButton();
+
 
 	/*
 	* Create the input
@@ -79,6 +80,7 @@ function CreateJField(property = false) {
 	JField.append(Input);
 
 	JField.append(KeyValuePairReplaceButton);
+
 
 	/*
 	* Return these elements
@@ -120,13 +122,17 @@ function CreateKeyValuePairField(){
 	/*
 	* Create the button that would convert the single value field to a double
 	* */
-	let valueButton = AddValueButton();
+	let ColumnOptions = AddColumnOptions();
+
+
+
 
 	fieldValue.append(input);
 
 	fieldValue.append(KeyValuePairReplaceButton);
 	container.append(fieldValue);
-	container.append(valueButton);
+	container.append(ColumnOptions);
+
 
 	JField.append(fieldProperty);
 	JField.append(container);
@@ -149,12 +155,36 @@ function KeyValuePairButton() {
 	return KeyValuePairReplaceButton;
 }
 
+
+function AddColumnOptions(){
+	let columnOptionButtons = createElement("div", "row",[{"attr":"data-jfieldtype", "value":"ColumnOptions"}]);
+
+	let addButton = AddValueButton();
+	let removeButton = AddRemoveButton();
+
+	columnOptionButtons.append(addButton);
+	columnOptionButtons.append(removeButton);
+
+	return  columnOptionButtons;
+
+}
+
+
 function AddValueButton() {
-	let KeyValuePairReplaceButton = createElement("button", "JField-value-button row",[{"attr":"type", "value":"button"}]);
+	let KeyValuePairReplaceButton = createElement("button", "JField-value-button col",[{"attr":"type", "value":"button"}]);
 	KeyValuePairReplaceButton.innerHTML = "+ ADD";
 	KeyValuePairReplaceButton.addEventListener("click", OnAddValueClick);
 	return KeyValuePairReplaceButton;
 }
+
+function AddRemoveButton(){
+	let deleteButton = createElement("button", "JField-value-button col",[{"attr":"type", "value":"button"}]);
+	deleteButton.innerHTML = "- Del";
+	deleteButton.addEventListener("click", OnRemoveValueClick);
+	return deleteButton;
+
+}
+
 
 
 /* ========= Create Elements ============   */
@@ -341,6 +371,19 @@ function CheckElementForJFieldType(ele, type){
 	return (ele.hasAttribute("data-jfieldtype") && ele.getAttribute("data-jfieldtype") === type)
 }
 
+function GetArrayOfAllValues(ele){
+	let elements = [];
+
+	for (let i = 0; i < ele.childNodes.length; i++) {
+
+		if (ele.childNodes[i].getAttribute("data-jfieldtype") === "JFieldValue") {
+			elements.push(ele.childNodes[i]);
+		}
+	}
+
+	return elements;
+}
+
 
 
 /* ========= Event Handlers ============   */
@@ -355,7 +398,6 @@ function OnJFieldKeyValuePairClick() {
 
 	thisGrandParent.classList.remove("row");
 
-
 	this.parentElement.innerHTML = "";
 
 	thisGrandParent.append(JField );
@@ -366,10 +408,53 @@ function OnAddValueClick() {
 
 	let JField = CreateJField();
 
-	let thisParent = this.parentElement;
+	let thisParent = this.parentElement.parentElement;
+
+
 
 	let numOfChildren = thisParent.childNodes.length;
 
 	thisParent.insertBefore(JField, thisParent.childNodes[numOfChildren - 1]);
 
+}
+
+function OnRemoveValueClick() {
+
+	let columnOptions = this.parentElement;
+
+	let valueContainer = columnOptions.parentElement;
+
+	let columnContainer = valueContainer.parentElement;
+
+
+
+	let valuesInThisArray = GetArrayOfAllValues(valueContainer);
+
+	let remainingValues = valuesInThisArray.length;
+
+	if (remainingValues > 0) {
+
+		if (remainingValues === 1 ) {
+
+			if (columnContainer.getAttribute("data-jfieldtype") === "KeyValue") {
+
+				let columnContainerParent = columnContainer.parentElement;
+
+				columnContainerParent.classList.add("row")
+
+				columnContainer.remove();
+
+				let jField = CreateJField()
+
+				let keyValueButton = KeyValuePairButton();
+
+				columnContainerParent.append(jField.childNodes[0]);
+
+				columnContainerParent.append(keyValueButton);
+			}
+		}
+		else {
+			valuesInThisArray[valuesInThisArray.length - 1].remove();
+		}
+	}
 }

@@ -40,7 +40,7 @@
 	z-index: 88;
 	display: none;
 }
-.JField-Div:hover .JField-value-button  {
+.array-container:hover .JField-value-button  {
 	display: block;
 }
 
