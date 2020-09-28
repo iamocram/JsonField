@@ -71,7 +71,7 @@ function CreateJField() {
 	* Create the input
 	* */
 	let Input = createElement("input", "JField-Row",[{"attr":"data-JFieldType", "value":"Input"},{"attr":"placeholder", "value":"value"}]);
-	Input.addEventListener("change",CreateJsonObject);
+	Input.addEventListener("keyup",CreateJsonObject);
 
 
 	/*
@@ -102,6 +102,7 @@ function CreateKeyValuePairField(){
 	* Create the input
 	* */
 	let input = createElement("input", "JField-Row row",[{"attr":"data-JFieldType", "value":"Input"},{"attr":"placeholder", "value":"Property Name"}]);
+	input.addEventListener("keyup", CreateJsonObject);
 
 	fieldProperty.append(input);
 
@@ -151,7 +152,7 @@ function KeyValuePairButton() {
 	let KeyValuePairReplaceButton = createElement("button", "JField-KeyValuePair-button",[{"attr":"type", "value":"button"}]);
 	KeyValuePairReplaceButton.innerHTML = "KeyValuePair";
 	KeyValuePairReplaceButton.addEventListener("click", OnJFieldKeyValuePairClick);
-	KeyValuePairReplaceButton.addEventListener("change",CreateJsonObject);
+	KeyValuePairReplaceButton.addEventListener("keyup",CreateJsonObject);
 	return KeyValuePairReplaceButton;
 }
 
@@ -416,6 +417,7 @@ function OnAddValueClick() {
 
 	thisParent.insertBefore(JField, thisParent.childNodes[numOfChildren - 1]);
 
+	CreateJsonObject();
 }
 
 function OnRemoveValueClick() {
@@ -456,5 +458,7 @@ function OnRemoveValueClick() {
 		else {
 			valuesInThisArray[valuesInThisArray.length - 1].remove();
 		}
+
+		CreateJsonObject();
 	}
 }
