@@ -44,6 +44,10 @@
 	display: block;
 }
 
+.array-container > .JField-Div.col .JField-KeyValuePair-button {
+	right:-15px;
+}
+
 .JField:hover .row.JField-value-button, .row.JField-value-button:hover {
 	display: block;
 }
