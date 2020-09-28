@@ -114,6 +114,7 @@ function CreateKeyValuePairField(){
 	let fieldValue = createElement("div","col JField-Div", {"attr":"data-JFieldType", "value":"JFieldValue"});;
 
 	input = createElement("input", "row JField-Row",[{"attr":"data-JFieldType", "value":"Input"},{"attr":"placeholder", "value":"Value"}]);
+	input.addEventListener("keyup", CreateJsonObject);
 
 	/*
 	* Create the button that would convert the single value field to a double
@@ -396,6 +397,8 @@ function OnJFieldKeyValuePairClick() {
 	let JField = CreateKeyValuePairField();
 
 	let thisGrandParent = this.parentElement;
+
+	JField.childNodes[0].childNodes[0].value = thisGrandParent.childNodes[0].value;
 
 	thisGrandParent.classList.remove("row");
 
