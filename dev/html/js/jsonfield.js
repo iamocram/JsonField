@@ -12,9 +12,17 @@
 * Event Handlers
 *
 * */
+var JFieldSingleValues = false;
 
 /* ========= INITIALIZE ============   */
-function initJField() {
+function initJField(options = null) {
+
+	if (options !== null) {
+		if (options["SingleValues"] !== undefined) {
+			JFieldSingleValues = options["SingleValues"];
+		}
+	}
+
 
 	let jFieldElements = document.getElementsByClassName("JField");
 
@@ -157,7 +165,6 @@ function KeyValuePairButton() {
 	return KeyValuePairReplaceButton;
 }
 
-
 function AddColumnOptions(){
 	let columnOptionButtons = createElement("div", "row",[{"attr":"data-jfieldtype", "value":"ColumnOptions"}]);
 
@@ -170,7 +177,6 @@ function AddColumnOptions(){
 	return  columnOptionButtons;
 
 }
-
 
 function AddValueButton() {
 	let KeyValuePairReplaceButton = createElement("button", "JField-value-button col",[{"attr":"type", "value":"button"}]);
@@ -267,20 +273,59 @@ function CreateJsonObject(){
 
 					if (thisJFieldValueElement.childNodes[0].className.includes("JField-Div-KeyValue")) {
 
+
+						let propertyName = RetrievePropertyName(thisJFieldValueElement);
+						let propertyValue = RetrievePropertyValue(thisJFieldValueElement);
+
 						let thisObj = {};
 
-						console.log(RetrievePropertyName(thisJFieldValueElement));
 
-						thisObj[ RetrievePropertyName(thisJFieldValueElement) ] = RetrievePropertyValue(thisJFieldValueElement);
 
-						// If there is a key value pair
-						result.push(thisObj);
+
+
+						if (typeof propertyValue === "object") {
+
+							let subObject = {};
+
+							/* Go through each value */
+							for (let k = 0; k < propertyValue.length; k++) {
+
+
+								if ( Array.isArray(propertyValue[k]) ) {
+									console.log("isArray");
+									subObject[k] = propertyValue[k];
+								}
+								else {
+									if (typeof propertyValue[k] === "string") {
+										subObject[k] = propertyValue[k];
+									}
+									else
+									{
+										let objectKey = Object.keys(propertyValue[k])[0];
+										subObject[objectKey] = propertyValue[k][objectKey];
+
+									}
+
+								}
+
+
+
+							}
+
+							thisObj[propertyName] = subObject;
+
+							result.push(thisObj);
+
+						}
+						else {
+							thisObj[ propertyName ] = propertyValue;
+							result.push(thisObj);
+						}
 
 					}
 					else {
 						// If there is only a value to grab
 						result.push(thisJFieldValueElement.childNodes[0].value);
-
 					}
 				}
 			}
@@ -366,6 +411,22 @@ function GetValuesFromArrayContainer(arrayContainer){
 			}
 		}
 	}
+
+	if (JFieldSingleValues) {
+		if (thisArray.length < 2) {
+			let sv = "";
+
+			if (thisArray.length === 1) {
+				sv = thisArray[0];
+			}
+
+			return sv
+		}
+
+
+	}
+
+
 	return thisArray;
 }
 
