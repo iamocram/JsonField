@@ -151,7 +151,7 @@ function CreateJFieldContainer() {
 
 function KeyValuePairButton() {
 	let KeyValuePairReplaceButton = createElement("button", "JField-KeyValuePair-button",[{"attr":"type", "value":"button"}]);
-	KeyValuePairReplaceButton.innerHTML = "KeyValuePair";
+	KeyValuePairReplaceButton.innerHTML = "KVP";
 	KeyValuePairReplaceButton.addEventListener("click", OnJFieldKeyValuePairClick);
 	KeyValuePairReplaceButton.addEventListener("keyup",CreateJsonObject);
 	return KeyValuePairReplaceButton;
@@ -174,14 +174,14 @@ function AddColumnOptions(){
 
 function AddValueButton() {
 	let KeyValuePairReplaceButton = createElement("button", "JField-value-button col",[{"attr":"type", "value":"button"}]);
-	KeyValuePairReplaceButton.innerHTML = "+ ADD";
+	KeyValuePairReplaceButton.innerHTML = "+";
 	KeyValuePairReplaceButton.addEventListener("click", OnAddValueClick);
 	return KeyValuePairReplaceButton;
 }
 
 function AddRemoveButton(){
 	let deleteButton = createElement("button", "JField-value-button col",[{"attr":"type", "value":"button"}]);
-	deleteButton.innerHTML = "- Del";
+	deleteButton.innerHTML = "-";
 	deleteButton.addEventListener("click", OnRemoveValueClick);
 	return deleteButton;
 
