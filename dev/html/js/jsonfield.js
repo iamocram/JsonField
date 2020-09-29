@@ -269,8 +269,6 @@ function CreateJsonObject(){
 
 						let thisObj = {};
 
-						console.log(RetrievePropertyName(thisJFieldValueElement));
-
 						thisObj[ RetrievePropertyName(thisJFieldValueElement) ] = RetrievePropertyValue(thisJFieldValueElement);
 
 						// If there is a key value pair
@@ -343,9 +341,12 @@ function RetrievePropertyValue(ele) {
 
 function GetValuesFromArrayContainer(arrayContainer){
 	let thisArray = [];
+	let thisObject = {};
+
 	for (let i = 0; i < arrayContainer.childNodes.length; i++) {
 
 		let thisNode = arrayContainer.childNodes[i];
+
 
 		if (CheckElementForJFieldType(thisNode,"JFieldValue")){
 
@@ -353,20 +354,29 @@ function GetValuesFromArrayContainer(arrayContainer){
 
 			if (CheckElementForJFieldType(Jnode,"KeyValue"))
 			{
-				let objVal = {};
 
-				objVal[ Jnode.childNodes[0].childNodes[0].value ] = GetValuesFromArrayContainer(Jnode.childNodes[1]);
+				let propName = RetrievePropertyName(Jnode);
 
-				thisArray.push(objVal);
+				thisObject[ propName ] = GetValuesFromArrayContainer(Jnode.childNodes[1] );
+
 
 			}
 			else
 			{
 				thisArray.push(thisNode.childNodes[0].value);
+
 			}
+
 		}
 	}
-	return thisArray;
+
+
+	if (Object.keys(thisObject).length > 0 && thisObject.constructor === Object)
+		return thisObject;
+	if (thisArray.length === 1)
+		return thisArray[0];
+
+	return thisArray.length > 0 ? thisArray : thisObject;
 }
 
 function CheckElementForJFieldType(ele, type){
