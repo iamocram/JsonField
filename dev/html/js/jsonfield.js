@@ -165,6 +165,7 @@ function KeyValuePairButton() {
 	return KeyValuePairReplaceButton;
 }
 
+
 function AddColumnOptions(){
 	let columnOptionButtons = createElement("div", "row",[{"attr":"data-jfieldtype", "value":"ColumnOptions"}]);
 
@@ -177,6 +178,7 @@ function AddColumnOptions(){
 	return  columnOptionButtons;
 
 }
+
 
 function AddValueButton() {
 	let KeyValuePairReplaceButton = createElement("button", "JField-value-button col",[{"attr":"type", "value":"button"}]);
@@ -273,59 +275,18 @@ function CreateJsonObject(){
 
 					if (thisJFieldValueElement.childNodes[0].className.includes("JField-Div-KeyValue")) {
 
-
-						let propertyName = RetrievePropertyName(thisJFieldValueElement);
-						let propertyValue = RetrievePropertyValue(thisJFieldValueElement);
-
 						let thisObj = {};
 
+						thisObj[ RetrievePropertyName(thisJFieldValueElement) ] = RetrievePropertyValue(thisJFieldValueElement);
 
-
-
-
-						if (typeof propertyValue === "object") {
-
-							let subObject = {};
-
-							/* Go through each value */
-							for (let k = 0; k < propertyValue.length; k++) {
-
-
-								if ( Array.isArray(propertyValue[k]) ) {
-									console.log("isArray");
-									subObject[k] = propertyValue[k];
-								}
-								else {
-									if (typeof propertyValue[k] === "string") {
-										subObject[k] = propertyValue[k];
-									}
-									else
-									{
-										let objectKey = Object.keys(propertyValue[k])[0];
-										subObject[objectKey] = propertyValue[k][objectKey];
-
-									}
-
-								}
-
-
-
-							}
-
-							thisObj[propertyName] = subObject;
-
-							result.push(thisObj);
-
-						}
-						else {
-							thisObj[ propertyName ] = propertyValue;
-							result.push(thisObj);
-						}
+						// If there is a key value pair
+						result.push(thisObj);
 
 					}
 					else {
 						// If there is only a value to grab
 						result.push(thisJFieldValueElement.childNodes[0].value);
+
 					}
 				}
 			}
@@ -388,9 +349,12 @@ function RetrievePropertyValue(ele) {
 
 function GetValuesFromArrayContainer(arrayContainer){
 	let thisArray = [];
+	let thisObject = {};
+
 	for (let i = 0; i < arrayContainer.childNodes.length; i++) {
 
 		let thisNode = arrayContainer.childNodes[i];
+
 
 		if (CheckElementForJFieldType(thisNode,"JFieldValue")){
 
@@ -398,36 +362,29 @@ function GetValuesFromArrayContainer(arrayContainer){
 
 			if (CheckElementForJFieldType(Jnode,"KeyValue"))
 			{
-				let objVal = {};
 
-				objVal[ Jnode.childNodes[0].childNodes[0].value ] = GetValuesFromArrayContainer(Jnode.childNodes[1]);
+				let propName = RetrievePropertyName(Jnode);
 
-				thisArray.push(objVal);
+				thisObject[ propName ] = GetValuesFromArrayContainer(Jnode.childNodes[1] );
+
 
 			}
 			else
 			{
 				thisArray.push(thisNode.childNodes[0].value);
+
 			}
+
 		}
 	}
 
-	if (JFieldSingleValues) {
-		if (thisArray.length < 2) {
-			let sv = "";
 
-			if (thisArray.length === 1) {
-				sv = thisArray[0];
-			}
+	if (Object.keys(thisObject).length > 0 && thisObject.constructor === Object)
+		return thisObject;
+	if (thisArray.length === 1)
+		return thisArray[0];
 
-			return sv
-		}
-
-
-	}
-
-
-	return thisArray;
+	return thisArray.length > 0 ? thisArray : thisObject;
 }
 
 function CheckElementForJFieldType(ele, type){
