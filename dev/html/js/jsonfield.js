@@ -12,6 +12,7 @@
 * Event Handlers
 *
 * */
+
 var JFieldSingleValues = false;
 
 /* ========= INITIALIZE ============   */
@@ -367,6 +368,10 @@ function GetValuesFromArrayContainer(arrayContainer){
 
 				thisObject[ propName ] = GetValuesFromArrayContainer(Jnode.childNodes[1] );
 
+				if (thisArray.length > 0) {
+
+					thisArray.push(thisObject);
+				}
 
 			}
 			else
@@ -378,8 +383,13 @@ function GetValuesFromArrayContainer(arrayContainer){
 		}
 	}
 
+	console.log(thisArray);
+	console.log(thisObject);
 
-	if (Object.keys(thisObject).length > 0 && thisObject.constructor === Object)
+
+
+
+	if (Object.keys(thisObject).length > 0 && thisObject.constructor === Object && thisArray.length === 0)
 		return thisObject;
 	if (thisArray.length === 1)
 		return thisArray[0];
