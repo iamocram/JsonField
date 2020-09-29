@@ -251,7 +251,6 @@ function addAttributes (element, attributes) {
 	return element;
 }
 
-
 /* ========= Result Logic============   */
 function CreateJsonObject(){
 
@@ -266,15 +265,16 @@ function CreateJsonObject(){
 
 		if (jFieldElements.childNodes[i].className.includes('array-container')){
 
-			result = GetValuesFromArrayContainer(jFieldElements.childNodes[i]);
+			result.push(GetValuesFromArrayContainer(jFieldElements.childNodes[i]));
 		}
 	}
 
-	jsonResultContainer.innerHTML = JSON.stringify(result);
-
+	jsonResultContainer.innerHTML = JSON.stringify(result.length > 1 ? result : result[0] );
 
 }
 
+
+/* ========= Small Logic Functions ============   */
 
 function RetrievePropertyName(ele){
 
