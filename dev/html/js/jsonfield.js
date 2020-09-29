@@ -266,31 +266,7 @@ function CreateJsonObject(){
 
 		if (jFieldElements.childNodes[i].className.includes('array-container')){
 
-			let arrayContainer = jFieldElements.childNodes[i];
-
-			for (let j = 0; j < arrayContainer.childNodes.length; j++) {
-
-				let thisJFieldValueElement = arrayContainer.childNodes[j];
-
-				if (thisJFieldValueElement.hasAttribute("data-jfieldtype") && thisJFieldValueElement.getAttribute('data-jfieldtype') === "JFieldValue" ){
-
-					if (thisJFieldValueElement.childNodes[0].className.includes("JField-Div-KeyValue")) {
-
-						let thisObj = {};
-
-						thisObj[ RetrievePropertyName(thisJFieldValueElement) ] = RetrievePropertyValue(thisJFieldValueElement);
-
-						// If there is a key value pair
-						result.push(thisObj);
-
-					}
-					else {
-						// If there is only a value to grab
-						result.push(thisJFieldValueElement.childNodes[0].value);
-
-					}
-				}
-			}
+			result = GetValuesFromArrayContainer(jFieldElements.childNodes[i]);
 		}
 	}
 
@@ -382,12 +358,6 @@ function GetValuesFromArrayContainer(arrayContainer){
 
 		}
 	}
-
-	console.log(thisArray);
-	console.log(thisObject);
-
-
-
 
 	if (Object.keys(thisObject).length > 0 && thisObject.constructor === Object && thisArray.length === 0)
 		return thisObject;
