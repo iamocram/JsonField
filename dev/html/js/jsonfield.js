@@ -294,34 +294,6 @@ function RetrievePropertyName(ele){
 		}
 	}
 }
-function RetrievePropertyValue(ele) {
-
-	for (let i = 0; i < ele.childNodes.length; i++) {
-
-		let thisEle = ele.childNodes[i];
-
-		if ( CheckElementForJFieldType(thisEle, "array-container")) {
-
-
-
-			let thisArray = GetValuesFromArrayContainer(thisEle);
-
-
-			return thisArray;
-		}
-		else {
-			let loop = RetrievePropertyValue(thisEle);
-
-			if (loop !== undefined) {
-				return loop;
-			}
-		}
-	}
-}
-
-
-
-/* ========= Small Logic Functions ============   */
 
 
 function GetValuesFromArrayContainer(arrayContainer){
