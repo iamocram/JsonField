@@ -149,7 +149,6 @@ function CreateKeyValuePairField(){
 	JField.append(container);
 
 	return JField;
-
 }
 
 function CreateJFieldContainer() {
@@ -180,7 +179,6 @@ function AddColumnOptions(){
 
 }
 
-
 function AddValueButton() {
 	let KeyValuePairReplaceButton = createElement("button", "JField-value-button col",[{"attr":"type", "value":"button"}]);
 	KeyValuePairReplaceButton.innerHTML = "+";
@@ -195,8 +193,6 @@ function AddRemoveButton(){
 	return deleteButton;
 
 }
-
-
 
 /* ========= Create Elements ============   */
 
@@ -228,13 +224,12 @@ function addClassNames (element, classNames) {
 		} else {
 			element.classList.add(classNames);
 		}
-
 	}
 
 	return element;
 }
 
-// [{ attr, value }]
+// attributes = [{ "attr", "value" }]
 function addAttributes (element, attributes) {
 
 	if (attributes !== undefined) {
@@ -309,6 +304,8 @@ function GetValuesFromArrayContainer(arrayContainer){
 
 			let Jnode = thisNode.childNodes[0];
 
+
+
 			if (CheckElementForJFieldType(Jnode,"KeyValue"))
 			{
 
@@ -317,7 +314,6 @@ function GetValuesFromArrayContainer(arrayContainer){
 				thisObject[ propName ] = GetValuesFromArrayContainer(Jnode.childNodes[1] );
 
 				if (thisArray.length > 0) {
-
 					thisArray.push(thisObject);
 				}
 
@@ -359,8 +355,6 @@ function GetArrayOfAllValues(ele){
 
 
 /* ========= Event Handlers ============   */
-
-
 
 function OnJFieldKeyValuePairClick() {
 
