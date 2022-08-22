@@ -33,7 +33,6 @@ function initJField(options = null) {
 	Array.from(jFieldElements).forEach((el) => {
 		StartContainerContent(el);
 	});
-
 }
 
 function StartContainerContent(jFieldInputContainer){
@@ -176,7 +175,6 @@ function AddColumnOptions(){
 	columnOptionButtons.append(removeButton);
 
 	return  columnOptionButtons;
-
 }
 
 function AddValueButton() {
@@ -225,7 +223,6 @@ function addClassNames (element, classNames) {
 			element.classList.add(classNames);
 		}
 	}
-
 	return element;
 }
 
@@ -254,18 +251,14 @@ function CreateJsonObject(){
 	let jsonResultContainer = document.getElementById("jsonResult");
 
 	let result = [];
-
-
 	for (let i = 0; i < jFieldElements.childNodes.length; i++) {
-
+		result.push(GetValuesFromArrayContainer(jFieldElements.childNodes[i]));
 		if (jFieldElements.childNodes[i].className.includes('array-container')){
-
-			result.push(GetValuesFromArrayContainer(jFieldElements.childNodes[i]));
+			//result.push(GetValuesFromArrayContainer(jFieldElements.childNodes[i]));
 		}
 	}
 
 	jsonResultContainer.innerHTML = JSON.stringify(result.length > 1 ? result : result[0] );
-
 }
 
 
@@ -294,17 +287,29 @@ function RetrievePropertyName(ele){
 function GetValuesFromArrayContainer(arrayContainer){
 	let thisArray = [];
 	let thisObject = {};
+	let layerIsAllKVP = true;
+
+	// Are all fields key value pairs
+
+	var jfields = GetJFieldElements(arrayContainer.childNodes);
+
+	for (let i = 0; i < jfields.length; i++) {
+		let Jnode = jfields[i];
+		if (Jnode.childNodes.length === 0) continue;
+
+		let kvpField = Jnode.childNodes[0];
+
+		if (!CheckElementForJFieldType(kvpField,"KeyValue")) layerIsAllKVP = false;
+	}
 
 	for (let i = 0; i < arrayContainer.childNodes.length; i++) {
+		if (!layerIsAllKVP) thisObject = {};
 
 		let thisNode = arrayContainer.childNodes[i];
-
 
 		if (CheckElementForJFieldType(thisNode,"JFieldValue")){
 
 			let Jnode = thisNode.childNodes[0];
-
-
 
 			if (CheckElementForJFieldType(Jnode,"KeyValue"))
 			{
@@ -313,17 +318,14 @@ function GetValuesFromArrayContainer(arrayContainer){
 
 				thisObject[ propName ] = GetValuesFromArrayContainer(Jnode.childNodes[1] );
 
-				if (thisArray.length > 0) {
+				if (!layerIsAllKVP) {
 					thisArray.push(thisObject);
 				}
-
 			}
 			else
 			{
 				thisArray.push(thisNode.childNodes[0].value);
-
 			}
-
 		}
 	}
 
@@ -333,6 +335,18 @@ function GetValuesFromArrayContainer(arrayContainer){
 		return thisArray[0];
 
 	return thisArray.length > 0 ? thisArray : thisObject;
+}
+
+function GetJFieldElements(ele)
+{
+	let elements = [];
+
+	for (let i = 0; i < ele.length; i++) {
+		let childNode = ele[i];
+		if (childNode.hasAttribute("data-jfieldtype") && childNode.getAttribute("data-jfieldtype") !== "ColumnOptions")
+			elements.push(childNode);
+	}
+	return elements;
 }
 
 function CheckElementForJFieldType(ele, type){
