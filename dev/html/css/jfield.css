@@ -1,3 +1,7 @@
+.JField .row {
+	margin-top: 1px;
+}
+
 .JField > .JFieldContainer-Div > .JField-Div >  button.JField-value-button  {
 	width: calc(100% + 30px);
 	margin: 0;
@@ -39,7 +43,10 @@
 	padding: 5px 0;
 	z-index: 88;
 	display: none;
+    border-radius: 0;
+    border: 1px solid #c5c1c1;
 }
+
 .array-container:hover .JField-value-button  {
 	display: block;
 }
