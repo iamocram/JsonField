@@ -13,7 +13,7 @@
 *
 * */
 
-var JFieldSingleValues = false;
+let JFieldSingleValues = false;
 
 /* ========= INITIALIZE ============   */
 function initJField(options = null) {
@@ -119,7 +119,7 @@ function CreateKeyValuePairField(){
 	/*
 	* Create Value Field
 	* */
-	let fieldValue = createElement("div","col JField-Div", {"attr":"data-JFieldType", "value":"JFieldValue"});;
+	let fieldValue = createElement("div","col JField-Div", {"attr":"data-JFieldType", "value":"JFieldValue"});
 
 	input = createElement("input", "row JField-Row",[{"attr":"data-JFieldType", "value":"Input"},{"attr":"placeholder", "value":"Value"}]);
 	input.addEventListener("keyup", CreateJsonObject);
@@ -291,7 +291,7 @@ function GetValuesFromArrayContainer(arrayContainer){
 
 	// Are all fields key value pairs
 
-	var jfields = GetJFieldElements(arrayContainer.childNodes);
+	let jfields = GetJFieldElements(arrayContainer.childNodes);
 
 	for (let i = 0; i < jfields.length; i++) {
 		let Jnode = jfields[i];
