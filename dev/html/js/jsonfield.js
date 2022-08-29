@@ -8,6 +8,7 @@
 * Create JField Buttons
 * Create Elements
 * Result Logic
+* Json to Form
 * Small Logic Functions
 * Event Handlers
 *
@@ -243,7 +244,7 @@ function addAttributes (element, attributes) {
 	return element;
 }
 
-/* ========= Result Logic============   */
+/* ========= Result Logic ============   */
 function CreateJsonObject(){
 
 	let jFieldElements = document.getElementsByClassName("JField")[0];
@@ -260,6 +261,14 @@ function CreateJsonObject(){
 
 	jsonResultContainer.innerHTML = JSON.stringify(result.length > 1 ? result : result[0] );
 }
+
+/* ========= Json to Form ===========   */
+function JsonToForm(jsonData)
+{
+
+
+}
+
 
 
 /* ========= Small Logic Functions ============   */
