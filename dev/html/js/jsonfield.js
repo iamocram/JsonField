@@ -398,7 +398,6 @@ function DetermineValueType(item) {
 
 function CreateFieldFromJsonData(parentEle,value) {
 	let fieldType = DetermineValueType(value);
-
 	switch (fieldType) {
 		case "Value":
 			let jField = CreateJField();
@@ -407,14 +406,13 @@ function CreateFieldFromJsonData(parentEle,value) {
 			parentEle.insertBefore(jField, parentEle.childNodes[numOfChildren - 1]);
 			break;
 		case "Array":
-			let standardArrayContainer = new CreateJFieldContainer();
 			for (let i = 0; i < value.length; i++) {
 				let jField = CreateJField();
 				SetJFieldData(jField,value[i]);
-				standardArrayContainer.append(jField);
+
+				let numOfArrayChildren = parentEle.childNodes.length;
+				parentEle.insertBefore(jField, parentEle.childNodes[numOfArrayChildren - 1]);
 			}
-			let numOfArrayChildren = parentEle.childNodes.length;
-			parentEle.insertBefore(standardArrayContainer, parentEle.childNodes[numOfArrayChildren - 1]);
 			break;
 		case "object":
 			/* Create JField */
@@ -440,40 +438,18 @@ function CreateFieldFromJsonData(parentEle,value) {
 			else // If the object has multiple property values
 			{
 				for (const [key, val] of Object.entries(value)) {
+					jFieldKeyValue = CreateJField();
+					jFieldKeyValue.innerHTML = "";
+					jFieldKeyValue.classList.remove("row")
+					KeyValuePair = new CreateKeyValuePairField();
+					container = KeyValuePair.childNodes[1];
+					container.innerHTML = "";
 					SetJFieldData(KeyValuePair, "", key)
-					CreateFieldFromJsonData(container,val);
 					jFieldKeyValue.append(KeyValuePair);
+					CreateFieldFromJsonData(container,val);
+					parentEle.insertBefore(jFieldKeyValue, parentEle.childNodes[parentEle.childNodes.length - 1]);
 				}
-				parentEle.insertBefore(jFieldKeyValue, parentEle.childNodes[parentEle.childNodes.length - 1]);
-
 			}
-
-
-
-
-
-
-
-
-
-
-				break;
-			let objectJField = undefined;
-			for (const [key, val] of Object.entries(value)) {
-				SetJFieldData(KeyValuePair, "",key)
-				let objectJField = new CreateJField();
-				CreateFieldFromJsonData(objectJField, val);
-				break;
-			}
-			KeyValuePair.childNodes[1].append(objectJfield);
-
-			let arrayContainer = KeyValuePair.childNodes[1];
-			arrayContainer.innerHTML = "";
-			jFieldKeyValue.append(KeyValuePair);
-
-
-			let numOfObjectChildren = parentEle.childNodes.length;
-			parentEle.insertBefore(jFieldKeyValue, parentEle.childNodes[numOfObjectChildren - 1]);
 			break;
 	}
 }
