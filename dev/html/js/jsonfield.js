@@ -8,6 +8,7 @@
 * Create JField Buttons
 * Create Elements
 * Result Logic
+* Json to Form
 * Small Logic Functions
 * Event Handlers
 *
@@ -48,8 +49,6 @@ function StartContainerContent(jFieldInputContainer){
 	container.append(JField);
 
 	container.append(ColumnOptions);
-
-
 
 	jFieldInputContainer.append(container);
 }
@@ -243,7 +242,7 @@ function addAttributes (element, attributes) {
 	return element;
 }
 
-/* ========= Result Logic============   */
+/* ========= Result Logic ============   */
 function CreateJsonObject(){
 
 	let jFieldElements = document.getElementsByClassName("JField")[0];
@@ -259,6 +258,33 @@ function CreateJsonObject(){
 	}
 
 	jsonResultContainer.innerHTML = JSON.stringify(result.length > 1 ? result : result[0] );
+}
+
+/* ========= Json to Form ===========   */
+function JsonToForm(jsonData)
+{
+	let jFieldElements = document.getElementsByClassName("JField")[0].childNodes[0];
+	jFieldElements.innerHTML = "";
+	jFieldElements.appendChild(AddColumnOptions());
+	console.log(jsonData);
+
+	if (Object.keys(jsonData).length > 0 && jsonData.constructor === Object && thisArray.length === 0)
+	{
+
+	}
+	else if (jsonData.length > 0)
+	{
+		for (let i = 0; i < jsonData.length; i++) {
+			CreateFieldFromJsonData(jFieldElements,jsonData[i]);
+		}
+	}
+	// Fix Spacing for top level items
+	for (let i = 0; i < jFieldElements.childNodes.length; i++) {
+		if (CheckElementForJFieldType(jFieldElements.childNodes[i],"JFieldValue") && CheckElementForJFieldType(jFieldElements.childNodes[i].childNodes[0],"KeyValue"))
+		jFieldElements.childNodes[i].classList.remove("row");
+	}
+
+	CreateJsonObject();
 }
 
 
@@ -282,7 +308,6 @@ function RetrievePropertyName(ele){
 		}
 	}
 }
-
 
 function GetValuesFromArrayContainer(arrayContainer){
 	let thisArray = [];
@@ -337,8 +362,7 @@ function GetValuesFromArrayContainer(arrayContainer){
 	return thisArray.length > 0 ? thisArray : thisObject;
 }
 
-function GetJFieldElements(ele)
-{
+function GetJFieldElements(ele) {
 	let elements = [];
 
 	for (let i = 0; i < ele.length; i++) {
@@ -349,7 +373,7 @@ function GetJFieldElements(ele)
 	return elements;
 }
 
-function CheckElementForJFieldType(ele, type){
+function CheckElementForJFieldType(ele, type) {
 	return (ele.hasAttribute("data-jfieldtype") && ele.getAttribute("data-jfieldtype") === type)
 }
 
@@ -366,7 +390,84 @@ function GetArrayOfAllValues(ele){
 	return elements;
 }
 
+function DetermineValueType(item) {
+	if (item.constructor === Object) return "object";
+	else if (Array.isArray(item)) return "Array";
+	else return "Value";
+}
 
+function CreateFieldFromJsonData(parentEle,value) {
+	let fieldType = DetermineValueType(value);
+	switch (fieldType) {
+		case "Value":
+			let jField = CreateJField();
+			SetJFieldData(jField,value);
+			let numOfChildren = parentEle.childNodes.length;
+			parentEle.insertBefore(jField, parentEle.childNodes[numOfChildren - 1]);
+			break;
+		case "Array":
+			for (let i = 0; i < value.length; i++) {
+				let jField = CreateJField();
+				SetJFieldData(jField,value[i]);
+
+				let numOfArrayChildren = parentEle.childNodes.length;
+				parentEle.insertBefore(jField, parentEle.childNodes[numOfArrayChildren - 1]);
+			}
+			break;
+		case "object":
+			/* Create JField */
+			let jFieldKeyValue = CreateJField();
+			jFieldKeyValue.innerHTML = "";
+
+			/* Create KeyValue */
+			let KeyValuePair = new CreateKeyValuePairField();
+			let container = KeyValuePair.childNodes[1];
+			container.innerHTML = "";
+			container.append(AddColumnOptions());
+
+			// If the object has a single property Value
+			if (Object.entries(value).length === 1)
+			{
+				for (const [key, val] of Object.entries(value)) {
+					SetJFieldData(KeyValuePair, "", key)
+					CreateFieldFromJsonData(container,val);
+					jFieldKeyValue.append(KeyValuePair);
+				}
+				parentEle.insertBefore(jFieldKeyValue, parentEle.childNodes[parentEle.childNodes.length - 1]);
+			}
+			else // If the object has multiple property values
+			{
+				for (const [key, val] of Object.entries(value)) {
+					jFieldKeyValue = CreateJField();
+					jFieldKeyValue.innerHTML = "";
+					jFieldKeyValue.classList.remove("row")
+					KeyValuePair = new CreateKeyValuePairField();
+					container = KeyValuePair.childNodes[1];
+					container.innerHTML = "";
+					SetJFieldData(KeyValuePair, "", key)
+					jFieldKeyValue.append(KeyValuePair);
+					CreateFieldFromJsonData(container,val);
+					parentEle.insertBefore(jFieldKeyValue, parentEle.childNodes[parentEle.childNodes.length - 1]);
+				}
+			}
+			break;
+	}
+}
+
+function SetJFieldData(ele, value, propertyName) {
+	 if (CheckElementForJFieldType(ele,"JFieldValue"))
+	 {
+		 ele.childNodes[0].value = value;
+	 } else if (CheckElementForJFieldType(ele,"KeyValue") && propertyName !== "")
+	{
+		let JFieldProperty = ele.childNodes[0];
+		JFieldProperty.childNodes[0].value = propertyName;
+	} else if (CheckElementForJFieldType(ele,"KeyValue") && value !== "")
+	{
+		let arrayContainer = ele.childNodes[1];
+		arrayContainer.childNodes[0].childNodes[0].value = value;
+	}
+}
 
 /* ========= Event Handlers ============   */
 
@@ -392,8 +493,6 @@ function OnAddValueClick() {
 
 	let thisParent = this.parentElement.parentElement;
 
-
-
 	let numOfChildren = thisParent.childNodes.length;
 
 	thisParent.insertBefore(JField, thisParent.childNodes[numOfChildren - 1]);
@@ -408,8 +507,6 @@ function OnRemoveValueClick() {
 	let valueContainer = columnOptions.parentElement;
 
 	let columnContainer = valueContainer.parentElement;
-
-
 
 	let valuesInThisArray = GetArrayOfAllValues(valueContainer);
 
