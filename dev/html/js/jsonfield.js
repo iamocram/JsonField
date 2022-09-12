@@ -17,23 +17,37 @@
 let JFieldSingleValues = false;
 
 /* ========= INITIALIZE ============   */
-function initJField(options = null) {
-
-	if (options !== null) {
-		if (options["SingleValues"] !== undefined) {
-			JFieldSingleValues = options["SingleValues"];
-		}
-	}
-
-
+function initJFields() {
 	let jFieldElements = document.getElementsByClassName("JField");
 
 	/*
 	 * Remove Event Handler for existing items
 	 */
 	Array.from(jFieldElements).forEach((el) => {
-		StartContainerContent(el);
+		initJField(el);
 	});
+}
+
+/* ========= INITIALIZE ============   */
+function initJField(jFieldElement) {
+	StartContainerContent(jFieldElement);
+}
+
+function CreateJFieldElement(parentElement,id,result)
+{
+	if (parentElement == null && id == null) {
+		console.log("Needs parent element and ID");
+		return;
+	}
+
+	let JFieldElement = createElement("div","JField",{"attr":"id", "value":id});
+	parentElement.appendChild(JFieldElement);
+	if (result == null)
+	{
+		let JFieldResultElement = createElement("input",undefined,[{"attr":"type", "value":"hidden"},{"attr":"data-JFieldID", "value":id}]);
+		parentElement.appendChild(JFieldResultElement);
+	}
+	StartContainerContent(JFieldElement);
 }
 
 function StartContainerContent(jFieldInputContainer){
@@ -43,8 +57,6 @@ function StartContainerContent(jFieldInputContainer){
 	let JField = CreateJField();
 
 	let ColumnOptions = AddColumnOptions();
-
-	//button.setAttribute("style","display:block;");
 
 	container.append(JField);
 
@@ -84,7 +96,6 @@ function CreateJField() {
 		if (ResultsContainerExist(JFieldFormElement.getAttribute("id")))
 			ShowResults(GetResultsContainer(JFieldFormElement),CreateJsonObject(JFieldFormElement));
 	});
-
 	/*
 	* Append the created elements
 	* */
@@ -217,10 +228,11 @@ function addClassNames (element, classNames) {
 	if (classNames !== undefined) {
 
 		// convert to array if string as spaces in it
-		if (classNames.indexOf(' ') >= 0)
-		{
-			classNames = classNames.split(" ");
-		}
+		if (classNames.includes(' '))
+			if (classNames.indexOf(' ') >= 0)
+			{
+				classNames = classNames.split(" ");
+			}
 
 		// if the class is an array
 		if (Array.isArray(classNames)){
@@ -259,7 +271,13 @@ function CreateJsonObject(JFieldElement){
 }
 
 function ShowResults(resultsContainerId,JsonData) {
+	SetResultToInput(resultsContainerId,JsonData);
 	resultsContainerId.innerHTML = JSON.stringify(JsonData.length > 1 ? JsonData : JsonData[0] );
+}
+
+function SetResultToInput(resultsContainerId,JsonData)
+{
+	if (resultsContainerId.hasAttribute("type")) 	resultsContainerId.value = JsonData;
 }
 
 
@@ -499,7 +517,7 @@ function ResultsContainerExist(formIdName) {
 function GetResultsContainer(JFieldElement) {
 	let JFieldIdName = JFieldElement.getAttribute("id");
 	if (JFieldIdName !== null) {
-		return document.querySelector('*[data-JFieldID="'+JFieldIdName+'"]')
+		return document.querySelector('*[data-JFieldID="'+JFieldIdName+'"]');
 	} else if (document.getElementById("JFieldResult")) {
 		return document.getElementById("JFieldResult");
 	}

@@ -27,7 +27,7 @@
 
 	<form class="container">
 		<div class="JField" id="FirstContainer"></div>
-		<p data-JFieldID="FirstContainer"></p>
+		<input type="hidden" data-JFieldID="FirstContainer">
 	</form>
 	<hr>
 	<form class="container">
@@ -41,8 +41,7 @@
 	</form>
 	<script type="text/javascript" src="js/jsonfield.js"></script>
 	<script type="text/javascript">
-		let options = {"SingleValues": true};
-		initJField(options);
+		initJFields();
 		//JsonToForm(["Value",{"KVP Property Name ":"kvp Value"},{"KVP Property Name A":["KVP Array Value 1","KVP Array Value 2","KVP Array Value 3"]},{"KVP Property Name O":{"OBJProp1":"OBJVal1","OBJProp2":"OBJVal2","OBJProp3":"OBJVal3"}}]);
 	</script>
 </body>
