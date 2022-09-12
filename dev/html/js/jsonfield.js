@@ -113,6 +113,7 @@ function CreateKeyValuePairField(){
 	* Create the input
 	* */
 	let input = createElement("input", "JField-Row row",[{"attr":"data-JFieldType", "value":"Input"},{"attr":"placeholder", "value":"Property Name"}]);
+
 	input.addEventListener("keyup", function(e){
 		let JFieldFormElement = GetThisJFieldFormElement(e);
 		if (ResultsContainerExist(JFieldFormElement.getAttribute("id")))
@@ -146,8 +147,9 @@ function CreateKeyValuePairField(){
 	let ColumnOptions = AddColumnOptions();
 
 	fieldValue.append(input);
-
 	fieldValue.append(KeyValuePairReplaceButton);
+	fieldValue.append(new OnJFieldArraySingleSwap());
+	
 	container.append(fieldValue);
 	container.append(ColumnOptions);
 
@@ -315,6 +317,7 @@ function GetValuesFromArrayContainer(arrayContainer){
 	let layerIsAllKVP = true;
 
 	// Are all fields key value pairs
+	console.log(arrayContainer);
 
 	let jfields = GetJFieldElements(arrayContainer.childNodes);
 
@@ -522,6 +525,24 @@ function OnJFieldKeyValuePairClick() {
 
 	thisGrandParent.append(JField );
 
+}
+
+function OnJFieldArraySingleSwap()
+{
+
+	let JField = createElement("button","JField-ArraySingleSwap-button",{"attr":"type","value":"button"});
+
+	JField.value = "[]";
+	JField.innerHTML = "[ ]";
+
+	return JField;
+	/*
+	let thisGrandParent = this.parentElement;
+
+	this.parentElement.innerHTML = "";
+
+	thisGrandParent.append(JField);
+	*/
 }
 
 function OnAddValueClick() {
