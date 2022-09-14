@@ -72,7 +72,7 @@ function StartContainerContent(jFieldInputContainer){
 * 1) Add another JField to the column below
 * 2) Replace Itself with a key value pair Element (value is another JField)
 * */
-function CreateJField() {
+function CreateJField(setValue) {
 
 	/*
 	* Create the main field container
@@ -90,7 +90,7 @@ function CreateJField() {
 	* Create the input
 	* */
 	let Input = createElement("input", "JField-Row",[{"attr":"data-JFieldType", "value":"Input"},{"attr":"placeholder", "value":"value"}]);
-
+	if (setValue!==undefined) Input.value = setValue;
 	Input.addEventListener("keyup", function(e){
 		let JFieldFormElement = GetThisJFieldFormElement(e);
 		if (ResultsContainerExist(JFieldFormElement.getAttribute("id")))
@@ -537,7 +537,6 @@ function GetThisJFieldFormElement(element) {
 			if (parent.tagName === "BODY") break;
 		}
 	}
-	console.log(JFieldID);
 	if (JFieldID === "" || JFieldID === null) return document.getElementsByClassName("JField")[0];
 	return document.getElementById(JFieldID);
 }
@@ -614,6 +613,8 @@ function OnRemoveValueClick() {
 
 	let columnContainer = valueContainer.parentElement;
 
+	let propertyValue = columnContainer.querySelector('div[data-jfieldtype="JFieldProperty"] input').value;
+
 	let valuesInThisArray = GetArrayOfAllValues(valueContainer);
 
 	let remainingValues = valuesInThisArray.length;
@@ -630,13 +631,17 @@ function OnRemoveValueClick() {
 
 				columnContainer.remove();
 
-				let jField = CreateJField()
+				let jField = CreateJField(propertyValue);
 
 				let keyValueButton = KeyValuePairButton();
+
+				let dataJFieldArrayType = columnContainerParent.hasAttribute("data-jfieldarray") ? "str" : "[]";
 
 				columnContainerParent.append(jField.childNodes[0]);
 
 				columnContainerParent.append(keyValueButton);
+
+				columnContainerParent.append(new ArraySingleSwapButton(dataJFieldArrayType));
 			}
 		}
 		else {
