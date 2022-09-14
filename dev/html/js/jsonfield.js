@@ -36,7 +36,7 @@ function initJField(jFieldElement) {
 function CreateJFieldElement(parentElement,id,result)
 {
 	if (parentElement == null && id == null) {
-		console.log("Needs parent element and ID");
+		console.error("FIELDS: Needs parent element and ID");
 		return;
 	}
 
@@ -297,10 +297,18 @@ function SetResultToInput(resultsContainerId,JsonData) {
 
 
 /* ========= Json to Form ===========   */
-function JsonToForm(jsonData) {
-	let jFieldElements = document.getElementsByClassName("JField")[0].childNodes[0];
-	jFieldElements.innerHTML = "";
-	jFieldElements.appendChild(AddColumnOptions());
+function JsonToForm(formName,jsonData) {
+
+	let jFieldForm = document.getElementById(formName);
+	if (jFieldForm === null) {
+		console.error("JFIELDS: The form: " + formName + " was not found.")
+		return;
+	}
+
+	let jFieldContainer = jFieldForm.childNodes[0];
+
+	jFieldContainer.innerHTML = "";
+	jFieldContainer.appendChild(AddColumnOptions());
 	if (Object.keys(jsonData).length > 0 && jsonData.constructor === Object && thisArray.length === 0)
 	{
 
@@ -308,15 +316,15 @@ function JsonToForm(jsonData) {
 	else if (jsonData.length > 0)
 	{
 		for (let i = 0; i < jsonData.length; i++) {
-			CreateFieldFromJsonData(jFieldElements,jsonData[i]);
+			CreateFieldFromJsonData(jFieldContainer,jsonData[i]);
 		}
 	}
 	// Fix Spacing for top level items
-	for (let i = 0; i < jFieldElements.childNodes.length; i++) {
-		if (CheckElementForJFieldType(jFieldElements.childNodes[i],"JFieldValue") && CheckElementForJFieldType(jFieldElements.childNodes[i].childNodes[0],"KeyValue"))
-		jFieldElements.childNodes[i].classList.remove("row");
+	for (let i = 0; i < jFieldContainer.childNodes.length; i++) {
+		if (CheckElementForJFieldType(jFieldContainer.childNodes[i],"JFieldValue") && CheckElementForJFieldType(jFieldContainer.childNodes[i].childNodes[0],"KeyValue"))
+		jFieldContainer.childNodes[i].classList.remove("row");
 	}
-	ShowResults(GetResultsContainer(document.getElementsByClassName("JField")[0]),CreateJsonObject(document.getElementsByClassName("JField")[0]));
+	ShowResults(GetResultsContainer(jFieldForm),CreateJsonObject(jFieldForm));
 }
 
 
@@ -439,11 +447,16 @@ function CreateFieldFromJsonData(parentEle,value) {
 			parentEle.insertBefore(jField, parentEle.childNodes[numOfChildren - 1]);
 			break;
 		case "Array":
+			console.log(fieldType + " | " + value);
 			for (let i = 0; i < value.length; i++) {
 				let jField = CreateJField();
+
 				SetJFieldData(jField,value[i]);
 
 				let numOfArrayChildren = parentEle.childNodes.length;
+
+				jField.setAttribute("data-jfieldarray","");
+
 				parentEle.insertBefore(jField, parentEle.childNodes[numOfArrayChildren - 1]);
 			}
 			break;
@@ -456,7 +469,9 @@ function CreateFieldFromJsonData(parentEle,value) {
 			let KeyValuePair = new CreateKeyValuePairField();
 			let container = KeyValuePair.childNodes[1];
 			container.innerHTML = "";
+			
 			container.append(AddColumnOptions());
+
 
 			// If the object has a single property Value
 			if (Object.entries(value).length === 1)
@@ -481,6 +496,7 @@ function CreateFieldFromJsonData(parentEle,value) {
 					jFieldKeyValue.append(KeyValuePair);
 					CreateFieldFromJsonData(container,val);
 					parentEle.insertBefore(jFieldKeyValue, parentEle.childNodes[parentEle.childNodes.length - 1]);
+
 				}
 			}
 			break;
@@ -488,14 +504,16 @@ function CreateFieldFromJsonData(parentEle,value) {
 }
 
 function SetJFieldData(ele, value, propertyName) {
-	 if (CheckElementForJFieldType(ele,"JFieldValue"))
-	 {
+	if (CheckElementForJFieldType(ele,"JFieldValue"))
+	{
 		 ele.childNodes[0].value = value;
-	 } else if (CheckElementForJFieldType(ele,"KeyValue") && propertyName !== "")
+	}
+	else if (CheckElementForJFieldType(ele,"KeyValue") && propertyName !== "")
 	{
 		let JFieldProperty = ele.childNodes[0];
 		JFieldProperty.childNodes[0].value = propertyName;
-	} else if (CheckElementForJFieldType(ele,"KeyValue") && value !== "")
+	}
+	else if (CheckElementForJFieldType(ele,"KeyValue") && value !== "")
 	{
 		let arrayContainer = ele.childNodes[1];
 		arrayContainer.childNodes[0].childNodes[0].value = value;
@@ -504,7 +522,7 @@ function SetJFieldData(ele, value, propertyName) {
 
 function ConvertHTMLToJason(JFieldElement){
 	if (!JFieldElement.classList.contains("JField")) {
-		console.log("You need to pass in the top level form element \".JField\"");
+		console.error("FIELDS: You need to pass in the top level form element \".JField\"");
 		return;
 	}
 	let result = [];
