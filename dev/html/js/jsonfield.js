@@ -72,7 +72,7 @@ function StartContainerContent(jFieldInputContainer){
 * 1) Add another JField to the column below
 * 2) Replace Itself with a key value pair Element (value is another JField)
 * */
-function CreateJField() {
+function CreateJField(setValue) {
 
 	/*
 	* Create the main field container
@@ -90,7 +90,7 @@ function CreateJField() {
 	* Create the input
 	* */
 	let Input = createElement("input", "JField-Row",[{"attr":"data-JFieldType", "value":"Input"},{"attr":"placeholder", "value":"value"}]);
-
+	if (setValue!==undefined) Input.value = setValue;
 	Input.addEventListener("keyup", function(e){
 		let JFieldFormElement = GetThisJFieldFormElement(e);
 		if (ResultsContainerExist(JFieldFormElement.getAttribute("id")))
@@ -157,11 +157,11 @@ function CreateKeyValuePairField(){
 	let ColumnOptions = AddColumnOptions();
 
 	fieldValue.append(input);
-
 	fieldValue.append(KeyValuePairReplaceButton);
+	fieldValue.append(new ArraySingleSwapButton("[]"));
+
 	container.append(fieldValue);
 	container.append(ColumnOptions);
-
 
 	JField.append(fieldProperty);
 	JField.append(container);
@@ -182,7 +182,6 @@ function KeyValuePairButton() {
 	KeyValuePairReplaceButton.addEventListener("keyup",CreateJsonObject);
 	return KeyValuePairReplaceButton;
 }
-
 
 function AddColumnOptions(){
 	let columnOptionButtons = createElement("div", "row",[{"attr":"data-jfieldtype", "value":"ColumnOptions"}]);
@@ -210,6 +209,23 @@ function AddRemoveButton(){
 	return deleteButton;
 
 }
+
+function ArraySingleSwapButton(type) {
+	let JField = createElement("button","JField-ArraySingleSwap-button",{"attr":"type","value":"button"});
+	if (type === "[]")
+	{
+		JField.value = "[]";
+		JField.innerHTML = "[ ]";
+	}
+	else
+	{
+		JField.value = "str";
+		JField.innerHTML = '""';
+	}
+	JField.addEventListener("click",function (){ new OnJFieldArraySingleSwap(this,JField.value)});
+	return JField;
+}
+
 
 /* ========= Create Elements ============   */
 
@@ -275,15 +291,13 @@ function ShowResults(resultsContainerId,JsonData) {
 	resultsContainerId.innerHTML = JSON.stringify(JsonData.length > 1 ? JsonData : JsonData[0] );
 }
 
-function SetResultToInput(resultsContainerId,JsonData)
-{
+function SetResultToInput(resultsContainerId,JsonData) {
 	if (resultsContainerId.hasAttribute("type")) 	resultsContainerId.value = JsonData;
 }
 
 
 /* ========= Json to Form ===========   */
-function JsonToForm(jsonData)
-{
+function JsonToForm(jsonData) {
 	let jFieldElements = document.getElementsByClassName("JField")[0].childNodes[0];
 	jFieldElements.innerHTML = "";
 	jFieldElements.appendChild(AddColumnOptions());
@@ -333,6 +347,7 @@ function GetValuesFromArrayContainer(arrayContainer){
 	let layerIsAllKVP = true;
 
 	// Are all fields key value pairs
+	let singleStringToArrayType = arrayContainer.childNodes[0].hasAttribute("data-jfieldarray");
 
 	let jfields = GetJFieldElements(arrayContainer.childNodes);
 
@@ -374,7 +389,7 @@ function GetValuesFromArrayContainer(arrayContainer){
 
 	if (Object.keys(thisObject).length > 0 && thisObject.constructor === Object && thisArray.length === 0)
 		return thisObject;
-	if (thisArray.length === 1)
+	if (thisArray.length === 1 && !singleStringToArrayType)
 		return thisArray[0];
 
 	return thisArray.length > 0 ? thisArray : thisObject;
@@ -488,6 +503,10 @@ function SetJFieldData(ele, value, propertyName) {
 }
 
 function ConvertHTMLToJason(JFieldElement){
+	if (!JFieldElement.classList.contains("JField")) {
+		console.log("You need to pass in the top level form element \".JField\"");
+		return;
+	}
 	let result = [];
 	for (let i = 0; i < JFieldElement.childNodes.length; i++) result.push(GetValuesFromArrayContainer(JFieldElement.childNodes[i]));
 	return result;
@@ -496,16 +515,28 @@ function ConvertHTMLToJason(JFieldElement){
 function GetThisJFieldFormElement(element) {
 	if (element === undefined || element == null) return document.getElementsByClassName("JField")[0];
 	let JFieldID = "";
-	let breadCrumbs = element["path"];
-	for (let i = 0; i < breadCrumbs.length; i++) {
-		let ele = breadCrumbs[i];
-		if (ele.classList !== undefined && ele.classList.contains("JField"))
-		{
-			JFieldID = ele.getAttribute("id");
-			break;
+
+	if (element["path"] !== undefined) {
+		let breadCrumbs = element["path"];
+		for (let i = 0; i < breadCrumbs.length; i++) {
+			let ele = breadCrumbs[i];
+			if (ele.classList !== undefined && ele.classList.contains("JField")) {
+				JFieldID = ele.getAttribute("id");
+				break;
+			}
 		}
 	}
-
+	if (element.parentElement != null)
+	{
+		let parent = element;
+		while (JFieldID === "")
+		{
+			if (parent.classList !== null && parent.classList.contains("JField"))
+				JFieldID = parent.getAttribute("id");
+			parent = parent.parentElement;
+			if (parent.tagName === "BODY") break;
+		}
+	}
 	if (JFieldID === "" || JFieldID === null) return document.getElementsByClassName("JField")[0];
 	return document.getElementById(JFieldID);
 }
@@ -542,6 +573,25 @@ function OnJFieldKeyValuePairClick() {
 
 }
 
+function OnJFieldArraySingleSwap(thisEvent,type) {
+
+	let thisParent = thisEvent.parentElement;
+	 if (type === "[]") {
+		 thisParent.setAttribute("data-JFieldArray","");
+		 thisEvent.value = "str";
+		 thisEvent.innerHTML = '""';
+	 }
+	 else {
+		 thisParent.removeAttribute("data-JFieldArray");
+		 thisEvent.value = "[]";
+		 thisEvent.innerHTML = "[]";
+	 }
+
+	let JFieldFormElement = GetThisJFieldFormElement(thisParent);
+	if (ResultsContainerExist(JFieldFormElement.getAttribute("id")))
+		ShowResults(GetResultsContainer(JFieldFormElement),CreateJsonObject(JFieldFormElement));
+}
+
 function OnAddValueClick() {
 
 	let JField = CreateJField();
@@ -556,12 +606,18 @@ function OnAddValueClick() {
 }
 
 function OnRemoveValueClick() {
+	let JFieldFormElement = GetThisJFieldFormElement(this);
 
 	let columnOptions = this.parentElement;
 
 	let valueContainer = columnOptions.parentElement;
 
 	let columnContainer = valueContainer.parentElement;
+
+	let propertyElement = columnContainer.querySelector('div[data-jfieldtype="JFieldProperty"] input');
+	let propertyValue;
+	if (propertyElement !== null)
+	propertyValue = propertyElement.value;
 
 	let valuesInThisArray = GetArrayOfAllValues(valueContainer);
 
@@ -579,13 +635,17 @@ function OnRemoveValueClick() {
 
 				columnContainer.remove();
 
-				let jField = CreateJField()
+				let jField = CreateJField(propertyValue);
 
 				let keyValueButton = KeyValuePairButton();
+
+				let dataJFieldArrayType = columnContainerParent.hasAttribute("data-jfieldarray") ? "str" : "[]";
 
 				columnContainerParent.append(jField.childNodes[0]);
 
 				columnContainerParent.append(keyValueButton);
+
+				columnContainerParent.append(new ArraySingleSwapButton(dataJFieldArrayType));
 			}
 		}
 		else {
@@ -594,4 +654,6 @@ function OnRemoveValueClick() {
 
 		CreateJsonObject();
 	}
+	if (ResultsContainerExist(JFieldFormElement.getAttribute("id")))
+		ShowResults(GetResultsContainer(JFieldFormElement),CreateJsonObject(JFieldFormElement));
 }

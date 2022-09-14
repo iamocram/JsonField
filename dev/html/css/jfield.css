@@ -27,7 +27,7 @@
 .JField-Div {
 	position: relative;
 }
-.JField-KeyValuePair-button {
+.JField-KeyValuePair-button, .JField-ArraySingleSwap-button {
 	display: none;
 	position: absolute;
 	right: 0;
@@ -37,7 +37,7 @@
 .JField-Div:hover > .JField-KeyValuePair-button  {
 	display: block;
 }
-.JField-value-button {
+.JField-value-button  {
 	width: 100%;
 	border-radius: 5px;
 	padding: 5px 0;
@@ -47,7 +47,11 @@
     border: 1px solid #c5c1c1;
 }
 
-.array-container:hover .JField-value-button  {
+.JField-ArraySingleSwap-button {
+	right:-40px !important;
+}
+
+.array-container:hover .JField-value-button, .JField-Div:hover > .JField-ArraySingleSwap-button {
 	display: block;
 }
 
