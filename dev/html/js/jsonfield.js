@@ -606,6 +606,7 @@ function OnAddValueClick() {
 }
 
 function OnRemoveValueClick() {
+	let JFieldFormElement = GetThisJFieldFormElement(this);
 
 	let columnOptions = this.parentElement;
 
@@ -613,7 +614,10 @@ function OnRemoveValueClick() {
 
 	let columnContainer = valueContainer.parentElement;
 
-	let propertyValue = columnContainer.querySelector('div[data-jfieldtype="JFieldProperty"] input').value;
+	let propertyElement = columnContainer.querySelector('div[data-jfieldtype="JFieldProperty"] input');
+	let propertyValue;
+	if (propertyElement !== null)
+	propertyValue = propertyElement.value;
 
 	let valuesInThisArray = GetArrayOfAllValues(valueContainer);
 
@@ -650,4 +654,6 @@ function OnRemoveValueClick() {
 
 		CreateJsonObject();
 	}
+	if (ResultsContainerExist(JFieldFormElement.getAttribute("id")))
+		ShowResults(GetResultsContainer(JFieldFormElement),CreateJsonObject(JFieldFormElement));
 }
