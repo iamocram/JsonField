@@ -1,0 +1,28 @@
+{
+  "name": "JsonField",
+  "version": "0.0.1",
+  "homepage": "A form field that creates a Json object",
+  "repository": "iamocram/JsonField",
+  "description": "JavaScript animation engine",
+  "umd:main": "lib/jsonfield.min.js",
+  "main": "lib/jsonfield.js",
+  "umd:name": "jsonfield",
+  "license": "MIT",
+  "author": "Marco Vasqyez <marco@mav.design>",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "node build"
+  },
+  "bugs": {
+    "url": "https://github.com/iamocram/JsonField/issues"
+  },
+  "keywords": [
+    "json",
+    "object",
+    "form",
+    "field",
+    "conversion"
+  ]
+}
