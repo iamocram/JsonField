@@ -449,6 +449,7 @@ function CreateFieldFromJsonData(parentEle,value) {
 		case "Array":
 			console.log(fieldType + " | " + value);
 			for (let i = 0; i < value.length; i++) {
+
 				let jField = CreateJField();
 
 				SetJFieldData(jField,value[i]);
@@ -469,7 +470,7 @@ function CreateFieldFromJsonData(parentEle,value) {
 			let KeyValuePair = new CreateKeyValuePairField();
 			let container = KeyValuePair.childNodes[1];
 			container.innerHTML = "";
-			
+
 			container.append(AddColumnOptions());
 
 
